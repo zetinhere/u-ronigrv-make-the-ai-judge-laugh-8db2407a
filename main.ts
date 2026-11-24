@@ -20,8 +20,11 @@ const LINE =
 mkdirSync("/output", { recursive: true });
 
 const text = LINE.trim();
-if (text.length < 1 || text.length > 200) {
-  throw new Error(`entry must be 1-200 characters, got ${text.length}`);
+// Count Unicode code points, not UTF-16 units, so the check matches the
+// gate's "1 to 200 characters" exactly even for non-ASCII lines.
+const charCount = [...text].length;
+if (charCount < 1 || charCount > 200) {
+  throw new Error(`entry must be 1-200 characters, got ${charCount}`);
 }
 if (text.includes("\n")) {
   throw new Error("entry must be a single line");
